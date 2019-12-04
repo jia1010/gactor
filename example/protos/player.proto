@@ -1,0 +1,12 @@
+syntax = "proto3";
+package protos;
+
+message Player {
+    string name = 1;
+    int32 age = 2;
+}
+
+message Equip {
+    string name = 1;
+    int32 level = 2;
+}
