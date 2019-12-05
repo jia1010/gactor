@@ -24,10 +24,10 @@ THE SOFTWARE.
 package gactor
 
 import (
-	"gactor/actor"
-	"gactor/etcd"
-	"gactor/etcd/agents"
-	"gactor/logger"
+	"github.com/mafei198/gactor/actor"
+	"github.com/mafei198/gactor/etcd"
+	"github.com/mafei198/gactor/etcd/agents"
+	"github.com/mafei198/gactor/logger"
 )
 
 var (

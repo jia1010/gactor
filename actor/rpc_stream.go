@@ -24,10 +24,10 @@ THE SOFTWARE.
 package actor
 
 import (
-	"gactor/api"
-	"gactor/cluster"
-	"gactor/logger"
-	rpcproto "gactor/rpc_proto"
+	"github.com/mafei198/gactor/api"
+	"github.com/mafei198/gactor/cluster"
+	"github.com/mafei198/gactor/logger"
+	rpcproto "github.com/mafei198/gactor/rpc_proto"
 	"github.com/rs/xid"
 )
 

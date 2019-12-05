@@ -1,6 +1,6 @@
 package gactor
 
-import "gactor/actor"
+import "github.com/mafei198/gactor/actor"
 
 func Call(toActorId string, params interface{}) (interface{}, error) {
 	return actor.Call(toActorId, params)

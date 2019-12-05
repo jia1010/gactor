@@ -26,8 +26,8 @@ package api
 import (
 	"errors"
 	"fmt"
-	"gactor/api/packet"
 	"github.com/golang/protobuf/proto"
+	"github.com/mafei198/gactor/api/packet"
 	"reflect"
 )
 

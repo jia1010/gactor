@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"gactor/api"
-	"gactor/example/actors"
-	"gactor/example/protos"
-	"gactor/logger"
 	"github.com/golang/protobuf/proto"
+	"github.com/mafei198/gactor/api"
+	"github.com/mafei198/gactor/example/actors"
+	"github.com/mafei198/gactor/example/protos"
+	"github.com/mafei198/gactor/logger"
 )
 
 type HelloHandler struct{}

@@ -24,10 +24,10 @@ THE SOFTWARE.
 package actor
 
 import (
-	"gactor/actor/gen_server"
-	"gactor/api"
-	"gactor/cluster"
-	rpcproto "gactor/rpc_proto"
+	"github.com/mafei198/gactor/actor/gen_server"
+	"github.com/mafei198/gactor/api"
+	"github.com/mafei198/gactor/cluster"
+	rpcproto "github.com/mafei198/gactor/rpc_proto"
 	"math"
 	"sync/atomic"
 	"time"

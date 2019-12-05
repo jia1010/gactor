@@ -25,10 +25,10 @@ package actor
 
 import (
 	"errors"
-	"gactor/actor/gen_server"
-	"gactor/cluster"
-	"gactor/logger"
-	"gactor/pool"
+	"github.com/mafei198/gactor/actor/gen_server"
+	"github.com/mafei198/gactor/cluster"
+	"github.com/mafei198/gactor/logger"
+	"github.com/mafei198/gactor/pool"
 	"runtime"
 	"time"
 )

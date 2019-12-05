@@ -25,7 +25,7 @@ package api
 
 import (
 	"errors"
-	"gactor/logger"
+	"github.com/mafei198/gactor/logger"
 	"time"
 )
 

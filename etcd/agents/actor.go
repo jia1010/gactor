@@ -25,10 +25,10 @@ package agents
 
 import (
 	"context"
-	"gactor/actor"
-	"gactor/cluster"
-	"gactor/etcd"
 	"github.com/coreos/etcd/mvcc/mvccpb"
+	"github.com/mafei198/gactor/actor"
+	"github.com/mafei198/gactor/cluster"
+	"github.com/mafei198/gactor/etcd"
 	"go.etcd.io/etcd/clientv3"
 	"time"
 )

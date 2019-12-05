@@ -25,8 +25,8 @@ package pool
 
 import (
 	"container/list"
-	"gactor/actor/gen_server"
-	"gactor/logger"
+	"github.com/mafei198/gactor/actor/gen_server"
+	"github.com/mafei198/gactor/logger"
 )
 
 type Pool struct {

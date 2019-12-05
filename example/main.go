@@ -1,18 +1,18 @@
 package main
 
 import (
-	"gactor"
-	"gactor/actor"
-	"gactor/example/actors"
-	"gactor/example/protos"
-	"gactor/logger"
+	"github.com/mafei198/gactor"
+	"github.com/mafei198/gactor/actor"
+	"github.com/mafei198/gactor/example/actors"
+	"github.com/mafei198/gactor/example/protos"
+	"github.com/mafei198/gactor/logger"
 	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	_ "gactor/example/handlers"
+	_ "github.com/mafei198/gactor/example/handlers"
 )
 
 func main() {

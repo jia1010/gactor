@@ -24,7 +24,7 @@ THE SOFTWARE.
 package actors
 
 import (
-	"gactor/actor"
+	"github.com/mafei198/gactor/actor"
 )
 
 var Player = actor.NewFactory(func() actor.Behavior { return new(PlayerBehavior) })

@@ -24,10 +24,10 @@ THE SOFTWARE.
 package actor
 
 import (
-	"gactor/actor/gen_server"
-	"gactor/api"
-	"gactor/logger"
-	"gactor/utils"
+	"github.com/mafei198/gactor/actor/gen_server"
+	"github.com/mafei198/gactor/api"
+	"github.com/mafei198/gactor/logger"
+	"github.com/mafei198/gactor/utils"
 	"time"
 )
 

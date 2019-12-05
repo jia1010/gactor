@@ -23,7 +23,7 @@ THE SOFTWARE.
 */
 package actor
 
-import rpcProto "gactor/rpc_proto"
+import rpcProto "github.com/mafei198/gactor/rpc_proto"
 
 type RpcAgent struct {
 	*rpcProto.StreamAgentMsg

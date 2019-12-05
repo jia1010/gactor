@@ -1,10 +1,10 @@
 package main
 
 import (
-	"gactor/api"
-	"gactor/example/protos"
-	"gactor/logger"
 	"github.com/golang/protobuf/proto"
+	"github.com/mafei198/gactor/api"
+	"github.com/mafei198/gactor/example/protos"
+	"github.com/mafei198/gactor/logger"
 	"strconv"
 	"testing"
 	"time"

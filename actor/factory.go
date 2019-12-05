@@ -25,12 +25,12 @@ package actor
 
 import (
 	"context"
-	"gactor/actor/gen_server"
-	"gactor/api"
-	"gactor/cluster"
-	rpcproto "gactor/rpc_proto"
-	"gactor/utils"
 	"github.com/golang/protobuf/proto"
+	"github.com/mafei198/gactor/actor/gen_server"
+	"github.com/mafei198/gactor/api"
+	"github.com/mafei198/gactor/cluster"
+	rpcproto "github.com/mafei198/gactor/rpc_proto"
+	"github.com/mafei198/gactor/utils"
 	"time"
 )
 

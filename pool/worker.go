@@ -24,8 +24,8 @@ THE SOFTWARE.
 package pool
 
 import (
-	"gactor/actor/gen_server"
-	"gactor/logger"
+	"github.com/mafei198/gactor/actor/gen_server"
+	"github.com/mafei198/gactor/logger"
 )
 
 func NewWorker(manager *Pool, idx int, handler TaskHandler) (*Worker, error) {

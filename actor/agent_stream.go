@@ -25,9 +25,9 @@ package actor
 
 import (
 	"errors"
-	"gactor/api"
-	"gactor/logger"
-	rpcproto "gactor/rpc_proto"
+	"github.com/mafei198/gactor/api"
+	"github.com/mafei198/gactor/logger"
+	rpcproto "github.com/mafei198/gactor/rpc_proto"
 	"github.com/rs/xid"
 )
 

@@ -26,8 +26,8 @@ package gen_server
 import (
 	"errors"
 	"fmt"
-	"gactor/logger"
-	"gactor/utils"
+	"github.com/mafei198/gactor/logger"
+	"github.com/mafei198/gactor/utils"
 	"sync"
 	"time"
 )
