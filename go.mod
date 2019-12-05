@@ -1,4 +1,4 @@
-module gactor
+module github.com/mafei198/gactor
 
 go 1.13
 
