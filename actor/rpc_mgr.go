@@ -144,7 +144,7 @@ func (m *RpcMgr) rpcRsp(params *RpcRspParams) {
 	if req := m.getRpcRequest(params.ReqId); req != nil {
 		m.delRpcRequest(params.ReqId)
 		if req.Handler != nil {
-			_ = asyncWrap(req.FromActorId, func(ctx interface{}) {
+			_ = AsyncWrap(req.FromActorId, func(ctx interface{}) {
 				if err := req.Handler(ctx, params, nil); err != nil {
 					logger.ERR("handle rpc response failed: ", err)
 				}
@@ -161,7 +161,7 @@ func (m *RpcMgr) rpcTimeout(req *RpcRequest) {
 	logger.ERR("Rpc timeout: ", req)
 	m.delRpcRequest(req.ReqId)
 	if req.Handler != nil {
-		_ = asyncWrap(req.FromActorId, func(ctx interface{}) {
+		_ = AsyncWrap(req.FromActorId, func(ctx interface{}) {
 			if err := req.Handler(ctx, nil, ErrTimeout); err != nil {
 				logger.ERR("handle rpc response failed: ", err)
 			}

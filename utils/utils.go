@@ -27,6 +27,7 @@ import (
 	"fmt"
 	"gactor/logger"
 	"net"
+	"reflect"
 	"runtime"
 	"runtime/debug"
 	"strings"
@@ -81,4 +82,12 @@ func PrintMemUsage() {
 
 func bToMb(b uint64) uint64 {
 	return b / 1024 / 1024
+}
+
+func GetType(msg interface{}) string {
+	if t := reflect.TypeOf(msg); t.Kind() == reflect.Ptr {
+		return t.Elem().Name()
+	} else {
+		return t.Name()
+	}
 }

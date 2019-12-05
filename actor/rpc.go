@@ -58,7 +58,7 @@ func (r *RpcRequest) IsLocal() (bool, error) {
 }
 
 // 异步发送RPC消息
-func Cast(toActorId string, params interface{}) error {
+func RpcCast(toActorId string, params interface{}) error {
 	request, err := newRpcRequest(api.ReqCast, "", toActorId, params)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func Cast(toActorId string, params interface{}) error {
 }
 
 // 同步Call
-func Call(toActorId string, params interface{}) (interface{}, error) {
+func RpcCall(toActorId string, params interface{}) (interface{}, error) {
 	request, err := newRpcRequest(api.ReqCall, "", toActorId, params)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func Call(toActorId string, params interface{}) (interface{}, error) {
 }
 
 // 异步发送RPC消息，并异步回调结果
-func AsyncCall(fromActorId, toActorId string, params interface{}, callback RpcHandler) error {
+func RpcAsyncCall(fromActorId, toActorId string, params interface{}, callback RpcHandler) error {
 	request, err := newRpcRequest(api.ReqCall, fromActorId, toActorId, params)
 	if err != nil {
 		return err

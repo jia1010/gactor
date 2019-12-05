@@ -26,20 +26,35 @@ package actor
 import (
 	"context"
 	"gactor/actor/gen_server"
+	"gactor/api"
 	"gactor/cluster"
-	proto "gactor/rpc_proto"
+	rpcproto "gactor/rpc_proto"
+	"gactor/utils"
+	"github.com/golang/protobuf/proto"
 	"time"
 )
 
 type Factory struct {
 	Category    string
-	Constructor func() IActor
+	Dispatch    *Dispatch
+	Constructor func() Behavior
+	Handlers    map[string]api.MsgHandler
 }
 
 var Factories = map[string]*Factory{}
 
-func NewFactory(category string, factory func() IActor) *Factory {
-	actorAgent := &Factory{Category: category, Constructor: factory}
+func NewFactory(factory func() Behavior, dispatch ...*Dispatch) *Factory {
+	category := utils.GetType(factory())
+	actorAgent := &Factory{
+		Category:    category,
+		Constructor: factory,
+		Handlers:    map[string]api.MsgHandler{},
+	}
+	if len(dispatch) > 0 {
+		actorAgent.Dispatch = dispatch[0]
+	} else {
+		actorAgent.Dispatch = DefaultDispatch()
+	}
 	Factories[category] = actorAgent
 	return actorAgent
 }
@@ -48,12 +63,27 @@ func GetFactory(category string) *Factory {
 	return Factories[category]
 }
 
-func (factory *Factory) Create(id, serverId string, dispatch *Dispatch) (*Meta, error) {
-	return AddMeta(factory.Category, id, serverId, dispatch)
+func (f *Factory) Register(msg proto.Message, handler api.MsgHandler) {
+	f.Handlers[utils.GetType(msg)] = handler
 }
 
-func (factory *Factory) StartService(id, serverId string, dispatch *Dispatch, options ...*gen_server.Option) error {
-	meta, err := FindOrCreate(factory.Category, id, serverId, dispatch)
+func (f *Factory) Route(msg interface{}) (api.MsgHandler, bool) {
+	handler, ok := f.Handlers[utils.GetType(msg)]
+	return handler, ok
+}
+
+func (f *Factory) Create(actorId ...string) (*Meta, error) {
+	var id string
+	if len(actorId) > 0 {
+		id = actorId[0]
+	} else {
+		id = GenMetaId()
+	}
+	return AddMeta(f.Category, id, f.Dispatch)
+}
+
+func (f *Factory) StartService(id string, options ...*gen_server.Option) error {
+	meta, err := FindOrCreate(f.Category, id, f.Dispatch)
 	if err != nil {
 		return err
 	}
@@ -73,7 +103,7 @@ func (factory *Factory) StartService(id, serverId string, dispatch *Dispatch, op
 		}
 		timeoutCtx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
-		_, err = client.RpcClient.StartActor(timeoutCtx, &proto.StartActorReq{
+		_, err = client.RpcClient.StartActor(timeoutCtx, &rpcproto.StartActorReq{
 			ActorId: meta.Uuid,
 			Timeout: int64(timeout),
 		})

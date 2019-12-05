@@ -3,16 +3,16 @@ package main
 import (
 	"gactor"
 	"gactor/actor"
-	"gactor/api"
 	"gactor/example/actors"
 	"gactor/example/protos"
 	"gactor/logger"
-	"github.com/golang/protobuf/proto"
 	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	_ "gactor/example/handlers"
 )
 
 func main() {
@@ -31,19 +31,13 @@ func main() {
 }
 
 func sendExampleMsg() {
-	// register msg factory
-	api.RegisterFactory(func() proto.Message {
-		return &protos.Player{}
-	})
-	// register handler
-	api.RegisterHandler(&protos.Player{}, func(req *api.Request) proto.Message {
-		logger.INFO("handle request: ", req)
-		return req.Params.(*protos.Player)
-	})
 	// create actor
-	actorId := createActor()
+	meta, err := actors.Player.Create()
+	if err != nil {
+		panic(err)
+	}
 	// send msg to actor
-	err := gactor.Cast(actorId, &protos.Player{
+	err = gactor.RpcCast(meta.Uuid, &protos.Player{
 		Name: "savin",
 		Age:  21,
 	})
@@ -54,10 +48,7 @@ func sendExampleMsg() {
 
 func createActor() string {
 	metaId := actor.GenMetaId()
-	meta, err := actors.PlayerFactory.Create(metaId, "fake_server_id", &actor.Dispatch{
-		Type:     actor.DispatchTypeDefault,
-		IsDaemon: false,
-	})
+	meta, err := actors.Player.Create(metaId)
 	if err != nil {
 		panic(err)
 	}

@@ -27,28 +27,17 @@ import (
 	"gactor/actor"
 )
 
-var PlayerFactory = actor.NewFactory("player", func() actor.IActor {
-	return new(Player)
-})
+var Player = actor.NewFactory(func() actor.Behavior { return new(PlayerBehavior) })
 
-type Player struct {
+type PlayerBehavior struct {
 	*actor.Server
 }
 
-func (r *Player) OnStart(server *actor.Server) error {
+func (r *PlayerBehavior) OnStart(server *actor.Server) error {
 	r.Server = server
 	return nil
 }
 
-func (r *Player) OnCall(msg interface{}) (interface{}, error) {
-	switch msg.(type) {
-	}
-	return nil, nil
-}
-
-func (r *Player) OnCast(msg interface{}) {
-}
-
-func (r *Player) OnStop(reason string) error {
+func (r *PlayerBehavior) OnStop(reason string) error {
 	return nil
 }

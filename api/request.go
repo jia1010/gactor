@@ -50,6 +50,10 @@ var (
 	ErrRouteNotFound = errors.New("route not found")
 )
 
+func NewLocalRequest(reqType int32, params interface{}) *Request {
+	return NewRequest(nil, reqType, 0, params)
+}
+
 func NewRequest(agent Agent, reqType int32, reqId int32, params interface{}) *Request {
 	request := &Request{
 		Responsed: false,
@@ -62,17 +66,8 @@ func NewRequest(agent Agent, reqType int32, reqId int32, params interface{}) *Re
 	return request
 }
 
-func (req *Request) Process(ctx interface{}) error {
-	handler, ok := Route(req.Params)
-	if !ok {
-		logger.ERR("Route not found: ", GetType(req.Params))
-		return ErrRouteNotFound
-	}
-	req.Ctx = ctx
-	if rsp := handler(req); rsp != nil {
-		return req.Response(rsp)
-	}
-	return nil
+func (req *Request) GetParams() interface{} {
+	return req.Params
 }
 
 var responsedErr = errors.New("request already responsed")

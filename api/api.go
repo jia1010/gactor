@@ -47,7 +47,7 @@ type MsgHandler func(req *Request) proto.Message
 var msgFactories = map[string]Factory{}
 var msgHandlers = map[string]MsgHandler{}
 
-func RegisterFactory(factory Factory) {
+func Register(factory Factory) {
 	name := GetType(factory())
 	if _, ok := msgFactories[name]; ok {
 		panic(fmt.Sprintln("duplicate message factory", name))

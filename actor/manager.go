@@ -230,7 +230,7 @@ func (ins *Manager) handleStartActor(actorId string) (*gen_server.GenServer, err
 		return nil, locationErr
 	}
 	actorAgent := GetFactory(meta.Category)
-	server, err := gen_server.Start(actorId, new(Server), meta, actorAgent.Constructor())
+	server, err := gen_server.Start(actorId, new(Server), meta, actorAgent)
 	ins.addActor(actorId, actorAgent)
 	return server, err
 }

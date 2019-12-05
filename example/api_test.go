@@ -11,7 +11,7 @@ import (
 )
 
 func TestRegister(t *testing.T) {
-	api.RegisterFactory(func() proto.Message { return &protos.Player{} })
+	api.Register(func() proto.Message { return &protos.Player{} })
 	start := time.Now().UnixNano()
 	for i := 0; i < 100000; i++ {
 		msg := &protos.Player{

@@ -42,7 +42,6 @@ type Meta struct {
 	Category    string           `json:"category"`
 	Dispatch    *Dispatch        `json:"dispatch"`
 	NodeId      string           `json:"node_id"`
-	ServerId    string           `json:"server_id"`
 	ActiveAt    int64            `json:"active_at"`
 	CreatedAt   int64            `json:"created_at"`
 	ModRevision int64            `json:"-"`
@@ -73,7 +72,20 @@ type CacheMeta struct {
 
 var CacheMetas map[string]*Meta
 
-func FindOrCreate(category, uuid, serverId string, dispatch *Dispatch) (*Meta, error) {
+func DefaultDispatch() *Dispatch {
+	return NewDispatch(DispatchTypeDefault, "")
+}
+
+func NewDispatch(dispatchType int, value string, isDaemon ...bool) *Dispatch {
+	dispatch := &Dispatch{
+		Type:     dispatchType,
+		Value:    value,
+		IsDaemon: len(isDaemon) > 0 && isDaemon[0],
+	}
+	return dispatch
+}
+
+func FindOrCreate(category, uuid string, dispatch *Dispatch) (*Meta, error) {
 	if meta := getMetaCache(uuid); meta != nil {
 		return meta, nil
 	}
@@ -82,12 +94,12 @@ func FindOrCreate(category, uuid, serverId string, dispatch *Dispatch) (*Meta, e
 		return nil, err
 	}
 	if meta == nil {
-		return AddMeta(category, uuid, serverId, dispatch)
+		return AddMeta(category, uuid, dispatch)
 	}
 	return meta, err
 }
 
-func AddMeta(category, uuid, serverId string, dispatch *Dispatch) (*Meta, error) {
+func AddMeta(category, uuid string, dispatch *Dispatch) (*Meta, error) {
 	if meta, err := GetMeta(uuid); err == nil || err != ErrActorMetaNotExists {
 		return meta, err
 	}
@@ -95,7 +107,6 @@ func AddMeta(category, uuid, serverId string, dispatch *Dispatch) (*Meta, error)
 	meta := &Meta{
 		Uuid:      uuid,
 		Category:  category,
-		ServerId:  serverId,
 		Dispatch:  dispatch,
 		ActiveAt:  now,
 		CreatedAt: now,
@@ -209,12 +220,6 @@ func chooseNodeForMeta(meta *Meta) (*cluster.Node, error) {
 		if game == nil {
 			game = cluster.ChooseNode(cluster.RoleDefault)
 		}
-	case DispatchTypeInMap:
-		meta, err := GetMeta(meta.ServerId)
-		if err != nil {
-			return nil, err
-		}
-		meta.GetNode()
 	}
 	return game, err
 }

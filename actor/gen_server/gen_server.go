@@ -67,7 +67,7 @@ type Request struct {
 
 type GenServer struct {
 	name        string
-	callback    GenServerBehavior
+	callback    Behavior
 	msgChannel  chan *Request
 	signChannel chan *SignPacket
 }
@@ -76,7 +76,7 @@ type Option struct {
 	Timeout time.Duration
 }
 
-type GenServerBehavior interface {
+type Behavior interface {
 	Init(args []interface{}) (err error)
 	HandleCast(req *Request)
 	HandleCall(req *Request) (interface{}, error)
@@ -127,7 +127,7 @@ func DelGenServer(name string) {
 	ServerRegisterMap.Delete(name)
 }
 
-func Start(serverName string, module GenServerBehavior, args ...interface{}) (*GenServer, error) {
+func Start(serverName string, module Behavior, args ...interface{}) (*GenServer, error) {
 	genServer, ok := GetGenServer(serverName)
 	if !ok {
 		genServer, err := New(module, args...)
@@ -143,7 +143,7 @@ func Start(serverName string, module GenServerBehavior, args ...interface{}) (*G
 	}
 }
 
-func New(module GenServerBehavior, args ...interface{}) (*GenServer, error) {
+func New(module Behavior, args ...interface{}) (*GenServer, error) {
 	msgChannel := make(chan *Request, MsgChannelLen)
 	signChannel := make(chan *SignPacket)
 

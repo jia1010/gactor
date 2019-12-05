@@ -27,6 +27,7 @@ import (
 	"gactor/actor/gen_server"
 	"gactor/api"
 	"gactor/logger"
+	"gactor/utils"
 	"time"
 )
 
@@ -35,46 +36,62 @@ type AsyncWrapHandler func(ctx interface{})
 
 const ExpireDuration = 600 // seconds
 
-type IActor interface {
+type Behavior interface {
 	OnStart(server *Server) error
-	OnCall(msg interface{}) (interface{}, error)
-	OnCast(msg interface{})
+	//OnCall(msg interface{}) (interface{}, error)
+	//OnCast(msg interface{})
 	OnStop(reason string) error
 }
 
-func Request(accountId string, request *api.Request) error {
-	return cast(accountId, &requestParams{request: request})
+func Call(actorId string, msg interface{}, options ...*gen_server.Option) (interface{}, error) {
+	server, err := GetActor(actorId)
+	if err != nil {
+		return nil, err
+	}
+	return server.Call(msg, options...)
 }
 
-func asyncWrap(accountId string, handler func(interface{})) error {
-	return cast(accountId, &wrapParams{handler: handler})
-}
-
-func cast(id string, msg interface{}) error {
-	server, err := GetActor(id)
+func Cast(actorId string, msg interface{}) error {
+	server, err := GetActor(actorId)
 	if err != nil {
 		return err
 	}
 	return server.Cast(msg)
 }
 
+func Wrap(id string, handler WrapHandler, options ...*gen_server.Option) (interface{}, error) {
+	return Call(id, &wrapParams{Handler: handler}, options...)
+}
+
+func AsyncWrap(id string, handler AsyncWrapHandler) error {
+	return Cast(id, &asyncWrapParams{Handler: handler})
+}
+
+func Request(accountId string, request *api.Request) error {
+	return Cast(accountId, &requestParams{request: request})
+}
+
 type Server struct {
-	Meta       *Meta
-	PlayerId   string
-	SceneId    string
-	Actor      IActor
-	ActiveAt   int64
-	Processed  int64
-	CurrentReq *api.Request
+	Meta      *Meta
+	PlayerId  string
+	SceneId   string
+	Factory   *Factory
+	Actor     Behavior
+	ActiveAt  int64
+	Processed int64
 
 	tickers []*time.Ticker
 }
 
+type requestParams struct{ request *api.Request }
+type wrapParams struct{ Handler WrapHandler }
+type asyncWrapParams struct{ Handler AsyncWrapHandler }
+
 func (ins *Server) Init(args []interface{}) (err error) {
 	ins.Meta = args[0].(*Meta)
-	ins.Actor = args[1].(IActor)
+	ins.Factory = args[1].(*Factory)
+	ins.Actor = ins.Factory.Constructor()
 	ins.PlayerId = ins.Meta.Uuid
-	ins.SceneId = ins.Meta.ServerId
 	ins.ActiveAt = time.Now().Unix()
 	ins.StartTicker(time.Minute, &activeCheckParams{})
 	return ins.Actor.OnStart(ins)
@@ -93,7 +110,12 @@ func (ins *Server) HandleCall(req *gen_server.Request) (interface{}, error) {
 		return nil, nil
 	default:
 		ins.ActiveAt = time.Now().Unix()
-		return ins.Actor.OnCall(req.Msg)
+		handler, ok := ins.Factory.Route(req.Msg)
+		if !ok || handler == nil {
+			return nil, api.ErrRouteNotFound
+		}
+		request := api.NewLocalRequest(api.ReqCall, req.Msg)
+		return handler(request), nil
 	}
 }
 
@@ -103,9 +125,14 @@ func (ins *Server) HandleCast(req *gen_server.Request) {
 	case *requestParams:
 		_ = ins.handleRequest(params)
 	case *wrapParams:
-		params.handler(ins.Actor)
+		params.Handler(ins.Actor)
 	default:
-		ins.Actor.OnCast(req.Msg)
+		if handler, ok := ins.Factory.Route(req.Msg); ok && handler != nil {
+			request := api.NewLocalRequest(api.ReqCast, req.Msg)
+			handler(request)
+		} else {
+			logger.ERR("Msg: ", req.Msg, api.ErrRouteNotFound)
+		}
 	}
 }
 
@@ -122,17 +149,19 @@ func (ins *Server) Terminate(reason string) error {
 	return err
 }
 
-type requestParams struct{ request *api.Request }
-type wrapParams struct{ handler func(ctx interface{}) }
-
 func (ins *Server) handleRequest(params *requestParams) error {
 	req := params.request
 	ins.Processed++
-	defer func() {
-		ins.CurrentReq = nil
-	}()
-	ins.CurrentReq = req
-	return req.Process(ins.Actor)
+	handler, ok := ins.Factory.Route(req.Params)
+	if !ok || handler == nil {
+		logger.ERR("Route not found: ", utils.GetType(req.Params))
+		return api.ErrRouteNotFound
+	}
+	req.Ctx = ins.Actor
+	if rsp := handler(req); rsp != nil {
+		return req.Response(rsp)
+	}
+	return nil
 }
 
 func (ins *Server) GetActorId() string {
@@ -141,13 +170,6 @@ func (ins *Server) GetActorId() string {
 
 func (ins *Server) GetCategory() string {
 	return ins.Meta.Category
-}
-
-func (ins *Server) GetReqAgent() api.Agent {
-	if ins.CurrentReq != nil {
-		return ins.CurrentReq.GetAgent()
-	}
-	return nil
 }
 
 func (ins *Server) StartTicker(duration time.Duration, msg interface{}) {
