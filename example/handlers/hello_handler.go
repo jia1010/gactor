@@ -6,7 +6,6 @@ import (
 	"github.com/mafei198/gactor/example/actors"
 	"github.com/mafei198/gactor/example/protos"
 	"github.com/mafei198/goslib/logger"
-	"github.com/mafei198/goslib/pbmsg"
 )
 
 type HelloHandler struct{}
@@ -14,10 +13,6 @@ type HelloHandler struct{}
 var Hello = new(HelloHandler)
 
 func init() {
-	// messages
-	pbmsg.Register(func() proto.Message { return new(protos.Player) })
-	pbmsg.Register(func() proto.Message { return new(protos.Equip) })
-
 	// handlers
 	actors.Player.Register(new(protos.Player), Hello.Login)
 	actors.Player.Register(new(protos.Equip), Hello.Equip)

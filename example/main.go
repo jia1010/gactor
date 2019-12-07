@@ -13,6 +13,7 @@ import (
 	"time"
 
 	_ "github.com/mafei198/gactor/example/handlers"
+	_ "github.com/mafei198/gactor/example/routes"
 )
 
 func main() {
