@@ -30,7 +30,7 @@ import (
 	"github.com/coreos/etcd/mvcc/mvccpb"
 	"github.com/mafei198/gactor/cluster"
 	"github.com/mafei198/gactor/etcd"
-	"github.com/mafei198/gactor/logger"
+	"github.com/mafei198/goslib/logger"
 	"github.com/rs/xid"
 	"go.etcd.io/etcd/clientv3"
 	"sync"

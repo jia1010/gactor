@@ -26,8 +26,9 @@ package actor
 import (
 	"errors"
 	"github.com/mafei198/gactor/api"
-	"github.com/mafei198/gactor/logger"
 	rpcproto "github.com/mafei198/gactor/rpc_proto"
+	"github.com/mafei198/goslib/logger"
+	"github.com/mafei198/goslib/pbmsg"
 	"github.com/rs/xid"
 )
 
@@ -60,7 +61,7 @@ func (a *AgentStream) receiveLoop() error {
 			logger.ERR("GameAgent err: ", err)
 			break
 		}
-		msg, err := api.Decode(in.Data)
+		msg, err := pbmsg.Decode(in.Data)
 		if err != nil {
 			logger.ERR("AgentStream decode failed:", err)
 			break

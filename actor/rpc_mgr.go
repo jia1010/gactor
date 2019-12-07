@@ -25,8 +25,8 @@ package actor
 
 import (
 	"errors"
-	"github.com/mafei198/gactor/actor/gen_server"
-	"github.com/mafei198/gactor/logger"
+	"github.com/mafei198/goslib/gen_server"
+	"github.com/mafei198/goslib/logger"
 	"time"
 )
 

@@ -27,7 +27,7 @@ import (
 	"github.com/mafei198/gactor/actor"
 	"github.com/mafei198/gactor/etcd"
 	"github.com/mafei198/gactor/etcd/agents"
-	"github.com/mafei198/gactor/logger"
+	"github.com/mafei198/goslib/logger"
 )
 
 var (

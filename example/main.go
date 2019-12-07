@@ -5,7 +5,7 @@ import (
 	"github.com/mafei198/gactor/actor"
 	"github.com/mafei198/gactor/example/actors"
 	"github.com/mafei198/gactor/example/protos"
-	"github.com/mafei198/gactor/logger"
+	"github.com/mafei198/goslib/logger"
 	"math/rand"
 	"os"
 	"os/signal"

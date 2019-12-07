@@ -26,10 +26,10 @@ package actor
 
 import (
 	"context"
-	"github.com/mafei198/gactor/actor/gen_server"
 	"github.com/mafei198/gactor/cluster"
-	"github.com/mafei198/gactor/logger"
 	proto "github.com/mafei198/gactor/rpc_proto"
+	"github.com/mafei198/goslib/gen_server"
+	"github.com/mafei198/goslib/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"io"

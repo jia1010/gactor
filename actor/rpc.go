@@ -24,10 +24,11 @@ THE SOFTWARE.
 package actor
 
 import (
-	"github.com/mafei198/gactor/actor/gen_server"
 	"github.com/mafei198/gactor/api"
 	"github.com/mafei198/gactor/cluster"
 	rpcproto "github.com/mafei198/gactor/rpc_proto"
+	"github.com/mafei198/goslib/gen_server"
+	"github.com/mafei198/goslib/pbmsg"
 	"math"
 	"sync/atomic"
 	"time"
@@ -105,7 +106,7 @@ func sendRequest(request *RpcRequest) error {
 		if err != nil {
 			return err
 		}
-		data, err := api.Encode(request.Params)
+		data, err := pbmsg.Encode(request.Params)
 		if err != nil {
 			return err
 		}

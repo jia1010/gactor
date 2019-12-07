@@ -26,8 +26,9 @@ package actor
 import (
 	"github.com/mafei198/gactor/api"
 	"github.com/mafei198/gactor/cluster"
-	"github.com/mafei198/gactor/logger"
 	rpcproto "github.com/mafei198/gactor/rpc_proto"
+	"github.com/mafei198/goslib/logger"
+	"github.com/mafei198/goslib/pbmsg"
 	"github.com/rs/xid"
 )
 
@@ -68,7 +69,7 @@ func (s *RpcStream) OnData(in *rpcproto.StreamAgentMsg) error {
 		s:              s,
 		StreamAgentMsg: in,
 	}
-	msg, err := api.Decode(in.Data)
+	msg, err := pbmsg.Decode(in.Data)
 	if err != nil {
 		return err
 	}

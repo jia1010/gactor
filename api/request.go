@@ -25,7 +25,8 @@ package api
 
 import (
 	"errors"
-	"github.com/mafei198/gactor/logger"
+	"github.com/mafei198/goslib/logger"
+	"github.com/mafei198/goslib/pbmsg"
 	"time"
 )
 
@@ -45,6 +46,11 @@ type Agent interface {
 	Close(reason string) error
 	GetUuid() string
 }
+
+const (
+	ReqCast = iota
+	ReqCall
+)
 
 var (
 	ErrRouteNotFound = errors.New("route not found")
@@ -85,7 +91,7 @@ func (req *Request) Response(msg interface{}) error {
 		return nil
 	case ReqCall:
 		logger.INFO(used, "ms RPC Response ReqId: ", req.ReqId, req.Agent.GetActorId(), " Params: ", msg)
-		data, err := Encode(msg)
+		data, err := pbmsg.Encode(msg)
 		if err != nil {
 			return err
 		}

@@ -30,8 +30,8 @@ import (
 	"github.com/mafei198/gactor/actor"
 	"github.com/mafei198/gactor/cluster"
 	"github.com/mafei198/gactor/etcd"
-	"github.com/mafei198/gactor/logger"
-	"github.com/mafei198/gactor/utils"
+	"github.com/mafei198/goslib/logger"
+	"github.com/mafei198/goslib/misc"
 	"go.etcd.io/etcd/clientv3"
 	"strconv"
 	"sync"
@@ -43,7 +43,7 @@ type NodeAgent struct {
 }
 
 func NewNodeAgent(port int) (*NodeAgent, error) {
-	localIP, err := utils.GetLocalIp()
+	localIP, err := misc.GetLocalIp()
 	if err != nil {
 		return nil, err
 	}
@@ -159,5 +159,5 @@ func updateNode(cli *clientv3.Client, node *cluster.Node, lease *clientv3.LeaseG
 		logger.ERR("marshal node failed: ", err, node)
 	}
 	_, err = cli.Put(context.TODO(), node.Uuid, string(data), clientv3.WithLease(lease.ID))
-	utils.PrintMemUsage()
+	misc.PrintMemUsage()
 }

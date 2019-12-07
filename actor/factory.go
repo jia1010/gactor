@@ -26,11 +26,11 @@ package actor
 import (
 	"context"
 	"github.com/golang/protobuf/proto"
-	"github.com/mafei198/gactor/actor/gen_server"
 	"github.com/mafei198/gactor/api"
 	"github.com/mafei198/gactor/cluster"
 	rpcproto "github.com/mafei198/gactor/rpc_proto"
-	"github.com/mafei198/gactor/utils"
+	"github.com/mafei198/goslib/gen_server"
+	"github.com/mafei198/goslib/misc"
 	"time"
 )
 
@@ -38,17 +38,19 @@ type Factory struct {
 	Category    string
 	Dispatch    *Dispatch
 	Constructor func() Behavior
-	Handlers    map[string]api.MsgHandler
+	Handlers    map[string]MsgHandler
 }
+
+type MsgHandler func(req *api.Request) proto.Message
 
 var Factories = map[string]*Factory{}
 
 func NewFactory(factory func() Behavior, dispatch ...*Dispatch) *Factory {
-	category := utils.GetType(factory())
+	category := misc.GetType(factory())
 	actorAgent := &Factory{
 		Category:    category,
 		Constructor: factory,
-		Handlers:    map[string]api.MsgHandler{},
+		Handlers:    map[string]MsgHandler{},
 	}
 	if len(dispatch) > 0 {
 		actorAgent.Dispatch = dispatch[0]
@@ -63,12 +65,12 @@ func GetFactory(category string) *Factory {
 	return Factories[category]
 }
 
-func (f *Factory) Register(msg proto.Message, handler api.MsgHandler) {
-	f.Handlers[utils.GetType(msg)] = handler
+func (f *Factory) Register(msg proto.Message, handler MsgHandler) {
+	f.Handlers[misc.GetType(msg)] = handler
 }
 
-func (f *Factory) Route(msg interface{}) (api.MsgHandler, bool) {
-	handler, ok := f.Handlers[utils.GetType(msg)]
+func (f *Factory) Route(msg interface{}) (MsgHandler, bool) {
+	handler, ok := f.Handlers[misc.GetType(msg)]
 	return handler, ok
 }
 

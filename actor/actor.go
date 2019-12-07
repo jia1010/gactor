@@ -24,10 +24,10 @@ THE SOFTWARE.
 package actor
 
 import (
-	"github.com/mafei198/gactor/actor/gen_server"
 	"github.com/mafei198/gactor/api"
-	"github.com/mafei198/gactor/logger"
-	"github.com/mafei198/gactor/utils"
+	"github.com/mafei198/goslib/gen_server"
+	"github.com/mafei198/goslib/logger"
+	"github.com/mafei198/goslib/misc"
 	"time"
 )
 
@@ -154,7 +154,7 @@ func (ins *Server) handleRequest(params *requestParams) error {
 	ins.Processed++
 	handler, ok := ins.Factory.Route(req.Params)
 	if !ok || handler == nil {
-		logger.ERR("Route not found: ", utils.GetType(req.Params))
+		logger.ERR("Route not found: ", misc.GetType(req.Params))
 		return api.ErrRouteNotFound
 	}
 	req.Ctx = ins.Actor
