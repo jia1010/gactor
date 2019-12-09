@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/golang/protobuf/proto"
-	"github.com/mafei198/gactor/example/protos"
+	"github.com/mafei198/gactor/example/gen/pt"
 	"github.com/mafei198/goslib/logger"
 	"github.com/mafei198/goslib/pbmsg"
 	"strconv"
@@ -11,10 +11,10 @@ import (
 )
 
 func TestRegister(t *testing.T) {
-	pbmsg.Register(func() proto.Message { return &protos.Player{} })
+	pbmsg.Register(func() proto.Message { return &pt.Player{} })
 	start := time.Now().UnixNano()
 	for i := 0; i < 100000; i++ {
-		msg := &protos.Player{
+		msg := &pt.Player{
 			Name: "savin",
 			Age:  18,
 		}

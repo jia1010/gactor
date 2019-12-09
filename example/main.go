@@ -6,7 +6,7 @@ import (
 	"github.com/mafei198/gactor/actor"
 	"github.com/mafei198/gactor/example/actors"
 	"github.com/mafei198/gactor/example/gen/gd"
-	"github.com/mafei198/gactor/example/protos"
+	"github.com/mafei198/gactor/example/gen/pt"
 	"github.com/mafei198/goslib/logger"
 	"github.com/mafei198/goslib/misc"
 	"io/ioutil"
@@ -64,7 +64,7 @@ func sendExampleMsg() {
 		panic(err)
 	}
 	// send msg to actor
-	err = gactor.RpcCast(meta.Uuid, &protos.Player{
+	err = gactor.RpcCast(meta.Uuid, &pt.Player{
 		Name: "savin",
 		Age:  21,
 	})
@@ -84,7 +84,7 @@ func createActor() string {
 }
 
 func sendRequest(actorId string) error {
-	return gactor.Cast(actorId, &protos.Player{
+	return gactor.Cast(actorId, &pt.Player{
 		Name: "savin",
 		Age:  21,
 	})

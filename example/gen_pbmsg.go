@@ -2,11 +2,18 @@ package main
 
 import (
 	"github.com/mafei198/goslib/pbmsg"
+	"os"
+	"path/filepath"
 )
 
 func main() {
 	protoDir := "./protos"
-	pkg := "protos"
-	outfile := "./protos/register.go"
-	pbmsg.Generate(protoDir, pkg, outfile)
+	pkg := "pt"
+	outfile := "./gen/pt/register.go"
+	if err := os.MkdirAll(filepath.Dir(outfile), os.ModePerm); err != nil {
+		panic(err)
+	}
+	if err := pbmsg.Generate(protoDir, pkg, outfile); err != nil {
+		panic(err)
+	}
 }
