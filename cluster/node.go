@@ -46,7 +46,7 @@ type Node struct {
 
 // Current server uuid
 var currentNodeId string
-var CacheNodes *sync.Map
+var CacheNodes = &sync.Map{}
 
 func GetCurrentNodeId() string {
 	return currentNodeId
