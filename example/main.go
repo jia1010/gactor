@@ -1,11 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/mafei198/gactor"
 	"github.com/mafei198/gactor/actor"
 	"github.com/mafei198/gactor/example/actors"
+	"github.com/mafei198/gactor/example/gen/gd"
 	"github.com/mafei198/gactor/example/protos"
 	"github.com/mafei198/goslib/logger"
+	"github.com/mafei198/goslib/misc"
+	"io/ioutil"
 	"math/rand"
 	"os"
 	"os/signal"
@@ -21,6 +25,11 @@ func main() {
 		panic(err)
 	}
 
+	// Load configData
+	if err := loadConfigData(); err != nil {
+		panic(err)
+	}
+
 	time.Sleep(2 * time.Second)
 	sendExampleMsg()
 
@@ -29,6 +38,23 @@ func main() {
 	<-stopChan // wait for SIGINT or SIGTERM
 	logger.INFO("Shutting gactor ...")
 	gactor.Stop()
+}
+
+func loadConfigData() error {
+	configData := map[string]string{}
+	content, err := ioutil.ReadFile("./example/gen/configData.json.gz")
+	if err != nil {
+		return err
+	}
+	data, err := misc.Gunzip(string(content))
+	if err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(data, &configData); err != nil {
+		return err
+	}
+	gd.LoadConfigs(configData)
+	return nil
 }
 
 func sendExampleMsg() {

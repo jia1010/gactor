@@ -4,6 +4,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/mafei198/gactor/api"
 	"github.com/mafei198/gactor/example/actors"
+	"github.com/mafei198/gactor/example/gen/gd"
 	"github.com/mafei198/gactor/example/protos"
 	"github.com/mafei198/goslib/logger"
 )
@@ -24,6 +25,8 @@ func (*HelloHandler) Ctx(ctx interface{}) *actors.PlayerBehavior {
 
 func (h *HelloHandler) Login(req *api.Request) proto.Message {
 	params := req.Params.(*protos.Player)
+	conf := gd.HeroIns.GetList()[0]
+	logger.INFO("heros: ", conf)
 	logger.INFO(params.Name)
 	return params
 }
